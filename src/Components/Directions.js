@@ -1,13 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
-import {
-  Button,
-  Col,
-  Container,
-  ListGroup,
-  Row,
-  Spinner,
-} from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 
 import CustomModal from "./Modal";
@@ -42,6 +35,7 @@ function Directions() {
 
   useEffect(() => {
     localStorage.setItem("routes", JSON.stringify(routes));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routes?.length]);
 
   const calculateRoute = async (e) => {
