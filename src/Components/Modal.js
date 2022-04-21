@@ -4,10 +4,12 @@ import ModalForm from "./ModalForm";
 
 function CustomModal({
   onSubmit,
-  originRef,
-  destinationRef,
   isVisible,
   closeModal,
+  inputFieldStops,
+  setInputFieldStops,
+  routeInfo,
+  setRouteInfo,
 }) {
   return (
     <Modal show={isVisible} onHide={closeModal}>
@@ -17,8 +19,10 @@ function CustomModal({
       <ModalBody>
         <ModalForm
           onSubmit={onSubmit}
-          originRef={originRef}
-          destinationRef={destinationRef}
+          inputFieldStops={inputFieldStops}
+          setInputFieldStops={setInputFieldStops}
+          routeInfo={routeInfo}
+          setRouteInfo={setRouteInfo}
         />
       </ModalBody>
     </Modal>
