@@ -253,7 +253,7 @@ function Directions() {
               variant="primary"
               onClick={exportRecords}
               size="lg"
-              disabled={routes.length < 1}
+              disabled={routes?.length < 1}
               className="mt-3"
             >
               Export Records
