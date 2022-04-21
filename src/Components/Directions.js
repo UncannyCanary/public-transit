@@ -35,14 +35,14 @@ function Directions() {
   const directionsRenderer = useRef(new google.maps.DirectionsRenderer());
 
   useEffect(() => {
-    if (routes.length === 0) {
+    if (routes?.length === 0) {
       directionsRenderer.current.setDirections({ routes: [] });
     }
-  }, [routes.length, directionsRenderer]);
+  }, [routes?.length, directionsRenderer]);
 
   useEffect(() => {
     localStorage.setItem("routes", JSON.stringify(routes));
-  }, [routes.length]);
+  }, [routes?.length]);
 
   const calculateRoute = async (e) => {
     e.preventDefault();
