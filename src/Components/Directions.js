@@ -1,14 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
-import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  ListGroup,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 
 import CustomModal from "./Modal";
 
 const center = { lat: 12.92, lng: 77.66 };
 
+const formatRecordsForExport = (records) => {
+  let obj = {
+    routes: records,
+  };
+  return obj;
+};
+
 function Directions() {
-  const [routes, setRoutes] = useState([]);
+  const [routes, setRoutes] = useState(
+    JSON.parse(localStorage.getItem("routes"))
+  );
   const [inputFieldStops, setInputFieldStops] = useState([]);
   const [map, setMap] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -22,7 +38,11 @@ function Directions() {
     if (routes.length === 0) {
       directionsRenderer.current.setDirections({ routes: [] });
     }
-  }, [routes, directionsRenderer]);
+  }, [routes.length, directionsRenderer]);
+
+  useEffect(() => {
+    localStorage.setItem("routes", JSON.stringify(routes));
+  }, [routes.length]);
 
   const calculateRoute = async (e) => {
     e.preventDefault();
@@ -52,6 +72,7 @@ function Directions() {
     // eslint-disable-next-line no-undef
     const directionService = new google.maps.DirectionsService();
     directionsRenderer.current.setMap(map);
+
     try {
       const results = await directionService.route({
         origin: routeObject.origin,
@@ -109,13 +130,20 @@ function Directions() {
     // eslint-disable-next-line no-undef
     const directionService = new google.maps.DirectionsService();
     directionsRenderer.current.setMap(map);
+    const waypointArray = route.stops.map((stop) => {
+      return {
+        location: stop.stopValue,
+        stopover: true,
+      };
+    });
+
     try {
       const results = await directionService.route({
         origin: route.origin,
         destination: route.destination,
         // eslint-disable-next-line no-undef
         travelMode: google.maps.TravelMode.DRIVING,
-        waypoints: route.stops,
+        waypoints: waypointArray,
       });
       directionsRenderer.current.setDirections(results);
     } catch (e) {
@@ -136,6 +164,25 @@ function Directions() {
     setIsEditFlow(false);
     openModal();
   };
+  const exportRecords = () => {
+    const records = formatRecordsForExport(routes);
+    const blob = new Blob([JSON.stringify(records)], { type: "text/json" });
+    const link = document.createElement("a");
+    link.download = "routes.json";
+    link.href = window.URL.createObjectURL(blob);
+    link.dataset.downloadurl = ["text/json", link.download, link.href].join(
+      ":"
+    );
+
+    const evt = new MouseEvent("click", {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+
+    link.dispatchEvent(evt);
+    link.remove();
+  };
 
   return (
     <Container fluid>
@@ -145,7 +192,9 @@ function Directions() {
             fluid
             className="pt-3"
             style={{
-              height: "95vh",
+              "@media (min-width: 600px)": {
+                height: "95vh",
+              },
               display: "flex",
               alignItems: "center",
               justifyContent: "flex-start",
@@ -199,6 +248,15 @@ function Directions() {
             )}
             <Button variant="primary" onClick={addRoute} size="lg">
               Add Route
+            </Button>
+            <Button
+              variant="primary"
+              onClick={exportRecords}
+              size="lg"
+              disabled={routes.length < 1}
+              className="mt-3"
+            >
+              Export Records
             </Button>
           </Container>
         </Col>

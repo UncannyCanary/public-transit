@@ -1,4 +1,5 @@
 import { useJsApiLoader } from "@react-google-maps/api";
+import { Spinner } from "react-bootstrap";
 import Directions from "./Components/Directions";
 
 function App() {
@@ -6,7 +7,7 @@ function App() {
     googleMapsApiKey: process.env.REACT_APP_MAP_API_KEY,
     libraries: ["places"],
   });
-  if (!isLoaded) return <></>;
+  if (!isLoaded) return <Spinner animation="border" />;
   return <Directions />;
 }
 
