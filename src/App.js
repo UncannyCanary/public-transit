@@ -3,7 +3,7 @@ import Directions from "./Components/Directions";
 
 function App() {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyBgegtBlPki6qbu05Vh4fMZgctMFoujJn8",
+    googleMapsApiKey: process.env.REACT_APP_MAP_API_KEY,
     libraries: ["places"],
   });
   if (!isLoaded) return <></>;
