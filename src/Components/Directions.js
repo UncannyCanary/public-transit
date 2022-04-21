@@ -202,14 +202,14 @@ function Directions() {
             }}
           >
             <h2>Routes</h2>
-            {routes.length < 1 ? (
+            {routes?.length < 1 ? (
               <p>
                 No routes added. Please add routes by clicking on Add Routes
                 button.
               </p>
             ) : (
               <ListGroup className="w-100 mb-5">
-                {routes.map((route) => (
+                {routes?.map((route) => (
                   <React.Fragment key={route.id}>
                     <ListGroup.Item
                       action
